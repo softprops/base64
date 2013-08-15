@@ -3,9 +3,9 @@ package base64
 object Encode {
   def encodeGroup(alphabet: Alphabet)(xs: Array[Char]): String = {
     val fill = ("0" * (6 - xs.size)).toArray
-    val char = alphabet.values(toInt(xs ++ fill))
+    val value = alphabet.values(toInt(xs ++ fill))
     val pad = (Pad * (xs.size % 3))
-    char + pad
+    value.toChar + pad
   }
 
   def encodeWith(alphabet: Alphabet)(bytes: Array[Byte]): String =
