@@ -98,7 +98,7 @@ object ByteBuffers {
     out.slice()
   }
 
-  def enc3to4(
+  private def enc3to4(
     in: Array[Byte],
     inOffset: Int,
     numSigBytes: Int, 
