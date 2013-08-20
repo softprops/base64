@@ -130,12 +130,12 @@ object ByteBuffers {
         out.update(outOffset,     index(inBuff >>> 18))
         out.update(outOffset + 1, index(inBuff >>> 12 & 0x3f))
         out.update(outOffset + 2, index(inBuff >>> 6 & 0x3f))
-        out.update(outOffset + 3, '=');
+        out.update(outOffset + 3, PadB);
       case 1 =>
         out.update(outOffset,     index(inBuff >>> 18))
         out.update(outOffset + 1, index(inBuff >>> 12 & 0x3f))
-        out.update(outOffset + 2, '=')
-        out.update(outOffset + 3, '=');
+        out.update(outOffset + 2, PadB)
+        out.update(outOffset + 3, PadB);
     }
   }
 }
