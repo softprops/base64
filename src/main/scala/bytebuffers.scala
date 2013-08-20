@@ -29,10 +29,11 @@ object ByteBuffers {
           b4.update(b4Posn, sbiCrop)
           val nextB4Posn = b4Posn + 1
           if (nextB4Posn > 3) {
+            val cnt = dec4to3(
+              b4, 0, out, outOffset, index
+            )
             if (sbiCrop == PadB) Right(outOffset) else read(
-              nextByte, 0, outOffset + dec4to3(
-                b4, 0, out, outOffset, index
-              )
+              nextByte, 0, outOffset + cnt
             )
           } else read(nextByte, nextB4Posn, outOffset)
         } else read(nextByte, b4Posn, outOffset)
@@ -43,9 +44,7 @@ object ByteBuffers {
       )
     }
     read().right.map {
-      case bytes =>
-        println("read %d bytes, expecting %s" format(bytes, len34))
-        out.slice()
+      case _ => out.slice()
     }
   }
 
