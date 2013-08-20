@@ -15,11 +15,12 @@ object ByteBuffers {
     val out = ByteBuffer.allocate(len34).order(in.order())
     val b4 = new Array[Byte](4)
     val index = alphabet.reversed
+    val readBounds = off + len
     def read(
       at: Int = off,
       b4Posn: Int = 0,
-      outBuffPosn: Int = 0)
-      (pred: Int => Boolean): Either[String, Int] = if (pred(at)) Right(outBuffPosn) else {
+      outOffset: Int = 0
+    ): Either[String, Int] = if (at >= readBounds) Right(outOffset) else {
       val sbiCrop = (in.get(at) & 0x7f).toByte  // Only the low seven bits
       val sbiDecode = index(sbiCrop)
       val nextByte = at + 1
@@ -28,20 +29,20 @@ object ByteBuffers {
           b4.update(b4Posn, sbiCrop)
           val nextB4Posn = b4Posn + 1
           if (nextB4Posn > 3) {
-            if (sbiCrop == PadB) Right(outBuffPosn) else read(
-              nextByte, 0, outBuffPosn + dec4to3(
-                b4, 0, out, outBuffPosn, index
+            if (sbiCrop == PadB) Right(outOffset) else read(
+              nextByte, 0, outOffset + dec4to3(
+                b4, 0, out, outOffset, index
               )
-            )(pred)
-          } else read(nextByte, nextB4Posn, outBuffPosn)(pred)
-        } else read(nextByte, b4Posn, outBuffPosn)(pred)
+            )
+          } else read(nextByte, nextB4Posn, outOffset)
+        } else read(nextByte, b4Posn, outOffset)
       } else Left(
           "bad Base64 input character at %d: %d" format(
             at, (index(at) & 0xFF)
           )
       )
     }
-    read()(_ >= off + len).right.map {
+    read().right.map {
       case bytes =>
         println("read %d bytes, expecting %s" format(bytes, len34))
         out.slice()
