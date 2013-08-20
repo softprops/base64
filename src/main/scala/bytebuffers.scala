@@ -38,7 +38,7 @@ object ByteBuffers {
     val inBuff = (if (numSigBytes > 0) in(inOffset)     << 24 >>> 8 else 0)  |
                  (if (numSigBytes > 1) in(inOffset + 1) << 24 >>> 16 else 0) |
                  (if (numSigBytes > 2) in(inOffset + 2) << 24 >>> 24 else 0)
-    numSigBytes match {
+    (numSigBytes: @annotation.switch) match {
       case 3 =>
         out.update(outOffset,     index(inBuff >>> 18))
         out.update(outOffset + 1, index(inBuff >>> 12 & 0x3f))
