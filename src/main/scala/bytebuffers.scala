@@ -48,8 +48,6 @@ object ByteBuffers {
     }
   }
 
-  def b(i: Byte): Byte = i
-
   def dec4to3(
     in: Array[Byte], inOffset: Int, out: ByteBuffer,
     outOffset: Int, index: Array[Byte]
