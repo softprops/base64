@@ -7,23 +7,23 @@ object ByteBuffers {
 
   def encodeWith(alphabet: Alphabet)(in: ByteBuffer) = {
     val len = in.remaining()
-    val encLenEst = (len / 3) * 4 + (if (len % 3 > 0) 4 else 0)
-    val out  = ByteBuffer.allocate(encLenEst).order(in.order())
+    val estEncLen = (len / 3) * 4 + (if (len % 3 > 0) 4 else 0)
+    val out  = ByteBuffer.allocate(estEncLen).order(in.order())
     val raw3 = new Array[Byte](3)
     val enc4 = new Array[Byte](4)
     while (in.hasRemaining) {
       val rem = Math.min(3, in.remaining())
       in.get(raw3, 0, rem)
-      bb3to4(raw3, 0, rem, enc4, 0, alphabet)
+      enc3to4(raw3, 0, rem, enc4, 0, alphabet.values)
       out.put(enc4)
     }
     out.slice()
   }
 
-  def bb3to4(
+  def enc3to4(
     in: Array[Byte], inOffset: Int, numSigBytes: Int, 
-    out: Array[Byte], outOffset: Int, alphabet: Alphabet) = {
-    val index = alphabet.values
+    out: Array[Byte], outOffset: Int, index: IndexedSeq[Byte]) {
+
     //           1         2         3  
     // 01234567890123456789012345678901 Bit position
     // --------000000001111111122222222 Array position from threeBytes
