@@ -3,6 +3,73 @@ package base64
 import java.nio.ByteBuffer
 
 object ByteBuffers {
+  val WhiteSpaceEnc = -5
+  val EqEnc = -1
+
+  def decode = decodeWith(StdAlphabet)_
+
+  def decodeWith(alphabet: Alphabet)(in: ByteBuffer) = {
+    val off = 0
+    val len = in.remaining()
+    val len34 = len * 3 / 4
+    val out = ByteBuffer.allocate(len34).order(in.order())
+    val b4 = new Array[Byte](4)
+    val index = alphabet.reversed
+    def read(i: Int = 0, b4Posn: Int = 0, outBuffPosn: Int = 0): Either[String, Int] = {
+      val sbiCrop = (in.get(i) & 0x7f).toByte  // Only the low seven bits
+      val sbiDecode = index(sbiCrop)
+      val nextByte = i + 1
+      if (sbiDecode >= WhiteSpaceEnc) {
+        if (sbiDecode >= EqEnc) {
+          b4.update(b4Posn, sbiCrop)
+          val nextB4Posn = b4Posn + 1
+          if (nextB4Posn > 3) {
+            if (sbiCrop == PadB) Right(outBuffPosn) else read(
+              nextByte, 0, outBuffPosn + dec4to3(b4, 0, out, outBuffPosn, index)
+            )
+          } else read(nextByte, nextB4Posn, outBuffPosn)
+        } else read(nextByte, b4Posn, outBuffPosn)
+      } else Left(
+          "bad Base64 input character at %d: %d" format(
+            i, (index(i) & 0xFF)
+          )
+      )
+    }
+    read().right.map {
+      case _ => out.slice()
+    }
+  }
+
+  def b(i: Byte): Byte = i
+
+  def dec4to3(
+    in: Array[Byte], inOffset: Int, out: ByteBuffer,
+    outOffset: Int, index: Array[Byte]
+  ): Int = {
+    if (in(inOffset + 2) == PadB) { // Dk==
+      val outBuff = ((index(in(inOffset)) & 0xFF)      << 18) |
+                    ((index(in(inOffset + 1)) & 0xFF ) << 12)
+      out.put(outOffset, (outBuff >>> 16).toByte)
+      1
+    } else if (in(inOffset + 3) == PadB) { // DkL=
+      val outBuff = ((index(in(inOffset)) & 0xFF)     << 18) |
+                    ((index(in(inOffset + 1)) & 0xFF) << 12) |
+                    ((index(in(inOffset + 2)) & 0xFF) <<  6)
+      out.put(outOffset, (outBuff >>> 16).toByte)
+      out.put(outOffset + 1, (outBuff >>> 8).toByte)
+      2
+    } else { // DkLE
+      val outBuff = ((index(in(inOffset)) & 0xFF)     << 18) |
+                    ((index(in(inOffset + 1)) & 0xFF) << 12) |
+                    ((index(in(inOffset + 2)) & 0xFF) << 6)  |
+                    ((index(in(inOffset + 3)) & 0xFF))
+      out.put(outOffset, (outBuff >> 16).toByte)
+      out.put(outOffset + 1, (outBuff >> 8).toByte)
+      out.put(outOffset + 2, (outBuff).toByte)
+      3
+    }
+  }
+
   def encode = encodeWith(StdAlphabet)_
 
   def encodeWith(alphabet: Alphabet)(in: ByteBuffer) = {
