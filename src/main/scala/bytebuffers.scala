@@ -8,6 +8,12 @@ object ByteBuffers {
 
   def decode = decodeWith(StdAlphabet)_
 
+  /**
+   *  @return Either[(Int, Int), ByteBuffer] where the Left is
+   *    is the position of an invalid byte and its decimal prepresentation
+   *    and the Right contains a ByteBuffer with the base64 decoded preresentation
+   *    of in.
+   */
   def decodeWith(alphabet: Alphabet)(in: ByteBuffer) = {
     val len = in.remaining()
     val off = in.position()
@@ -20,7 +26,7 @@ object ByteBuffers {
       at: Int = off,
       b4Posn: Int = 0,
       outOffset: Int = 0
-    ): Either[String, Int] = if (at >= readBounds) Right(outOffset) else {
+    ): Either[(Int, Int), Int] = if (at >= readBounds) Right(outOffset) else {
       val sbiCrop = (in.get(at) & 0x7f).toByte  // Only the low seven bits
       val sbiDecode = index(sbiCrop)
       val nextByte = at + 1
@@ -37,20 +43,19 @@ object ByteBuffers {
             )
           } else read(nextByte, nextB4Posn, outOffset)
         } else read(nextByte, b4Posn, outOffset)
-      } else Left(
-          "bad Base64 input character at %d: %d" format(
-            at, (index(at) & 0xFF)
-          )
-      )
+      } else Left((at, index(at) & 0xFF))
     }
     read().right.map {
       case _ => out.slice()
     }
   }
 
-  def dec4to3(
-    in: Array[Byte], inOffset: Int, out: ByteBuffer,
-    outOffset: Int, index: Array[Byte]
+  private def dec4to3(
+    in: Array[Byte],
+    inOffset: Int,
+    out: ByteBuffer,
+    outOffset: Int,
+    index: Array[Byte]
   ): Int = {
     if (in(inOffset + 2) == PadB) { // Dk==
       val outBuff = ((index(in(inOffset)) & 0xFF)      << 18) |
@@ -94,8 +99,12 @@ object ByteBuffers {
   }
 
   def enc3to4(
-    in: Array[Byte], inOffset: Int, numSigBytes: Int, 
-    out: Array[Byte], outOffset: Int, index: IndexedSeq[Byte]) {
+    in: Array[Byte],
+    inOffset: Int,
+    numSigBytes: Int, 
+    out: Array[Byte],
+    outOffset: Int,
+    index: IndexedSeq[Byte]) {
 
     //           1         2         3  
     // 01234567890123456789012345678901 Bit position
