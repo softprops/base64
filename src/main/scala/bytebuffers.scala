@@ -9,34 +9,42 @@ object ByteBuffers {
   def decode = decodeWith(StdAlphabet)_
 
   def decodeWith(alphabet: Alphabet)(in: ByteBuffer) = {
-    val off = 0
     val len = in.remaining()
+    val off = in.position()
     val len34 = len * 3 / 4
     val out = ByteBuffer.allocate(len34).order(in.order())
     val b4 = new Array[Byte](4)
     val index = alphabet.reversed
-    def read(i: Int = 0, b4Posn: Int = 0, outBuffPosn: Int = 0): Either[String, Int] = {
-      val sbiCrop = (in.get(i) & 0x7f).toByte  // Only the low seven bits
+    def read(
+      at: Int = off,
+      b4Posn: Int = 0,
+      outBuffPosn: Int = 0)
+      (pred: Int => Boolean): Either[String, Int] = if (pred(at)) Right(outBuffPosn) else {
+      val sbiCrop = (in.get(at) & 0x7f).toByte  // Only the low seven bits
       val sbiDecode = index(sbiCrop)
-      val nextByte = i + 1
+      val nextByte = at + 1
       if (sbiDecode >= WhiteSpaceEnc) {
         if (sbiDecode >= EqEnc) {
           b4.update(b4Posn, sbiCrop)
           val nextB4Posn = b4Posn + 1
           if (nextB4Posn > 3) {
             if (sbiCrop == PadB) Right(outBuffPosn) else read(
-              nextByte, 0, outBuffPosn + dec4to3(b4, 0, out, outBuffPosn, index)
-            )
-          } else read(nextByte, nextB4Posn, outBuffPosn)
-        } else read(nextByte, b4Posn, outBuffPosn)
+              nextByte, 0, outBuffPosn + dec4to3(
+                b4, 0, out, outBuffPosn, index
+              )
+            )(pred)
+          } else read(nextByte, nextB4Posn, outBuffPosn)(pred)
+        } else read(nextByte, b4Posn, outBuffPosn)(pred)
       } else Left(
           "bad Base64 input character at %d: %d" format(
-            i, (index(i) & 0xFF)
+            at, (index(at) & 0xFF)
           )
       )
     }
-    read().right.map {
-      case _ => out.slice()
+    read()(_ >= off + len).right.map {
+      case bytes =>
+        println("read %d bytes, expecting %s" format(bytes, len34))
+        out.slice()
     }
   }
 
