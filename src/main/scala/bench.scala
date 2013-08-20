@@ -9,6 +9,8 @@ object Bench {
 
     val bytebuffer = ByteBuffer.wrap(bytes)
 
+    val encoded = "TWFuIGlzIGRpc3Rpbmd1aXNoZWQsIG5vdCBvbmx5IGJ5IGhpcyByZWFzb24sIGJ1dCBieSB0aGlzIHNpbmd1bGFyIHBhc3Npb24gZnJvbSBvdGhlciBhbmltYWxzLCB3aGljaCBpcyBhIGx1c3Qgb2YgdGhlIG1pbmQsIHRoYXQgYnkgYSBwZXJzZXZlcmFuY2Ugb2YgZGVsaWdodCBpbiB0aGUgY29udGludWVkIGFuZCBpbmRlZmF0aWdhYmxlIGdlbmVyYXRpb24gb2Yga25vd2xlZGdlLCBleGNlZWRzIHRoZSBzaG9ydCB2ZWhlbWVuY2Ugb2YgYW55IGNhcm5hbCBwbGVhc3VyZS4=".getBytes
+
     def repeat(times: Int)(f: => Unit) = {
       val before = System.currentTimeMillis
       for (i <- 0 to times)(f)
@@ -22,10 +24,17 @@ object Bench {
         bytebuffer.rewind()
         ByteBuffers.encode(bytebuffer)
       }
+
+      val apacheDec = repeat(times) { Base64.decodeBase64(encoded) }
+      val oursDec   = repeat(times) { Decode(encoded) }
+
       if (log) {
-        println("apache commons (byte arrays) took %s ms" format apache) // 7ms / 5000
-        println("ours (byte arrays)           took %s ms" format ours)   // 4980ms / 5000
-        println("ours (byte buffers)          took %s ms" format oursbb) // 43ms / 5000
+        println("enc apache commons (byte arrays) took %s ms" format apache) // 7ms / 5000
+        println("enc ours (byte arrays)           took %s ms" format ours)   // 4980ms / 5000
+        println("enc ours (byte buffers)          took %s ms" format oursbb) // 43ms / 5000
+
+        println("dec apache commons (byte arrays) took %s ms" format apache) // 7ms / 5000
+        println("dec ours (byte arrays)           took %s ms" format ours)   // 4980ms / 5000
       }
     }
 

@@ -1,7 +1,7 @@
 package base64
 
 object Decode {
-  def decodeWith(alphabet: Alphabet)(xs: Array[Char]) =
+  def decodeWith(alphabet: Alphabet)(xs: Array[Byte]) =
     xs.filterNot(_ == '=')
       .map(alphabet.reversed(_))
       .map(i => toBinaryStr(i.toByte).substring(2))
@@ -11,7 +11,7 @@ object Decode {
       .map(g => toInt(g).toChar)
       .mkString("")
 
-  def apply(chars: Array[Char]) =
+  def apply(chars: Array[Byte]) =
     decodeWith(StdAlphabet)(chars)
 
   def urlSafe =
