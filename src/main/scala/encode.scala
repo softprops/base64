@@ -2,8 +2,14 @@ package base64
 
 object Encode {
   def encodeGroup(alphabet: Alphabet)(xs: Array[Char]): String = {
-    val fill = ("0" * (6 - xs.size)).toArray
-    val value = alphabet.values(toInt(xs ++ fill))
+    val fill: Array[Char] = ("0" * (6 - xs.size)).toArray
+    def concat(a: Array[Char], b: Array[Char]): Array[Char] = {
+      val res = new Array[Char](a.length + b.length)
+      System.arraycopy(a, 0, res, 0, a.length)
+      System.arraycopy(b, 0, res, a.length, b.length)
+      res
+    }
+    val value = alphabet.values(toInt(concat(xs, fill)))
     val pad = (Pad * (xs.size % 3))
     value.toChar + pad
   }
