@@ -23,5 +23,17 @@ class ByteBuffersBenchmark extends SimpleBenchmark {
     b.rewind()
     ByteBuffers.decode(b)
   }
+
+  def timeOurUrlsafeEnc(n: Int) = for (i <- 0 to n) {
+    val b = Bench.bytebuffer
+    b.rewind()
+    ByteBuffers.encodeUrlSafe(b)
+  }
+
+  def timeOurUrlsafeDec(n: Int) = for (i <- 0 to n) {
+    val b = Bench.encodedBb
+    b.rewind()
+    ByteBuffers.decodeUrlSafe(b)
+  }
 }
 

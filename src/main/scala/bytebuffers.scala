@@ -6,6 +6,9 @@ object ByteBuffers {
   val WhiteSpaceEnc = -5
   val EqEnc = -1
 
+  def decodeUrlSafe =
+    decodeWith(URLSafeAlphabet)_
+
   def decode = decodeWith(StdAlphabet)_
 
   /**
@@ -80,6 +83,9 @@ object ByteBuffers {
       3
     }
   }
+
+  def encodeUrlSafe =
+    encodeWith(URLSafeAlphabet)_
 
   def encode = encodeWith(StdAlphabet)_
 
