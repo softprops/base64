@@ -12,9 +12,11 @@ homepage := Some(url("https://github.com/softprops/%s/#readme".format(name.value
 
 scalaVersion := "2.9.3"
 
+scalacOptions += Opts.compile.deprecation
+
 crossScalaVersions := Seq("2.9.3", "2.10.2")
 
-libraryDependencies += "commons-codec" % "commons-codec" % "1.2"
+libraryDependencies += "commons-codec" % "commons-codec" % "1.2" % "test"
 
 seq(bintraySettings:_*)
 
@@ -25,3 +27,5 @@ seq(lsSettings:_*)
 (LsKeys.tags in LsKeys.lsync) := Seq("base64")
 
 (externalResolvers in LsKeys.lsync) := (resolvers in bintray.Keys.bintray).value
+
+seq(cappiTasks:_*)
