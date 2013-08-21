@@ -41,7 +41,7 @@ object Decode {
             val cnt = dec4to3(
               b4, 0, out, outOffset, index
             )
-            if (sbiCrop == PadB) Right(outOffset) else read(
+            if (sbiCrop == Pad) Right(outOffset) else read(
               nextByte, 0, outOffset + cnt
             )
           } else read(nextByte, nextB4Posn, outOffset)
@@ -60,12 +60,12 @@ object Decode {
     outOffset: Int,
     index: Array[Byte]
   ): Int = {
-    if (in(inOffset + 2) == PadB) { // Dk==
+    if (in(inOffset + 2) == Pad) { // Dk==
       val outBuff = ((index(in(inOffset)) & 0xFF)      << 18) |
                     ((index(in(inOffset + 1)) & 0xFF ) << 12)
       out.put(outOffset, (outBuff >>> 16).toByte)
       1
-    } else if (in(inOffset + 3) == PadB) { // DkL=
+    } else if (in(inOffset + 3) == Pad) { // DkL=
       val outBuff = ((index(in(inOffset)) & 0xFF)     << 18) |
                     ((index(in(inOffset + 1)) & 0xFF) << 12) |
                     ((index(in(inOffset + 2)) & 0xFF) <<  6)

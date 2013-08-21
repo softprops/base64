@@ -90,7 +90,7 @@ package object base64 {
     )
   }
   
-  val PadB: Byte = '='
+  val Pad: Byte = '='
   val WhiteSpaceEnc = -5
   val EqEnc = -1
 }
