@@ -1,19 +1,86 @@
 package base64
 
+import java.nio.ByteBuffer
+
 object Decode {
-  def decodeWith(alphabet: Alphabet)(xs: Array[Byte]) =
-    xs.filterNot(_ == '=')
-      .map(alphabet.reversed(_))
-      .map(i => toBinaryStr(i.toByte).substring(2))
-      .flatten
-      .grouped(8)
-      .filterNot(_.length < 8)
-      .map(g => toInt(g).toChar)
-      .mkString("")
 
-  def apply(chars: Array[Byte]) =
-    decodeWith(StdAlphabet)(chars)
+  def urlSafe[T: Input](in: T) =
+    decodeWith(URLSafeAlphabet)(in)
 
-  def urlSafe =
-    decodeWith(URLSafeAlphabet)_
+  def apply[T : Input](in: T) =
+    decodeWith(StdAlphabet)(in)
+
+  /**
+   *  @return Either[(Int, Int), ByteBuffer] where the Left is
+   *    is the position of an invalid byte and its decimal prepresentation
+   *    and the Right contains a ByteBuffer with the base64 decoded preresentation
+   *    of in.
+   */
+  def decodeWith[T : Input](alphabet: Alphabet)(ins: T) = {
+    val in = implicitly[Input[T]].apply(ins)
+    val len = in.remaining()
+    val off = in.position()
+    val len34 = len * 3 / 4
+    val out = ByteBuffer.allocate(len34).order(in.order())
+    val b4 = new Array[Byte](4)
+    val index = alphabet.reversed
+    val readBounds = off + len
+    def read(
+      at: Int = off,
+      b4Posn: Int = 0,
+      outOffset: Int = 0
+    ): Either[(Int, Int), Int] = if (at >= readBounds) Right(outOffset) else {
+      val sbiCrop = (in.get(at) & 0x7f).toByte  // Only the low seven bits
+      val sbiDecode = index(sbiCrop)
+      val nextByte = at + 1
+      if (sbiDecode >= WhiteSpaceEnc) {
+        if (sbiDecode >= EqEnc) {
+          b4.update(b4Posn, sbiCrop)
+          val nextB4Posn = b4Posn + 1
+          if (nextB4Posn > 3) {
+            val cnt = dec4to3(
+              b4, 0, out, outOffset, index
+            )
+            if (sbiCrop == PadB) Right(outOffset) else read(
+              nextByte, 0, outOffset + cnt
+            )
+          } else read(nextByte, nextB4Posn, outOffset)
+        } else read(nextByte, b4Posn, outOffset)
+      } else Left((at, index(at) & 0xFF))
+    }
+    read().right.map {
+      case _ => out.slice()
+    }
+  }
+
+  private def dec4to3(
+    in: Array[Byte],
+    inOffset: Int,
+    out: ByteBuffer,
+    outOffset: Int,
+    index: Array[Byte]
+  ): Int = {
+    if (in(inOffset + 2) == PadB) { // Dk==
+      val outBuff = ((index(in(inOffset)) & 0xFF)      << 18) |
+                    ((index(in(inOffset + 1)) & 0xFF ) << 12)
+      out.put(outOffset, (outBuff >>> 16).toByte)
+      1
+    } else if (in(inOffset + 3) == PadB) { // DkL=
+      val outBuff = ((index(in(inOffset)) & 0xFF)     << 18) |
+                    ((index(in(inOffset + 1)) & 0xFF) << 12) |
+                    ((index(in(inOffset + 2)) & 0xFF) <<  6)
+      out.put(outOffset, (outBuff >>> 16).toByte)
+      out.put(outOffset + 1, (outBuff >>> 8).toByte)
+      2
+    } else { // DkLE
+      val outBuff = ((index(in(inOffset)) & 0xFF)     << 18) |
+                    ((index(in(inOffset + 1)) & 0xFF) << 12) |
+                    ((index(in(inOffset + 2)) & 0xFF) << 6)  |
+                    ((index(in(inOffset + 3)) & 0xFF))
+      out.put(outOffset, (outBuff >> 16).toByte)
+      out.put(outOffset + 1, (outBuff >> 8).toByte)
+      out.put(outOffset + 2, (outBuff).toByte)
+      3
+    }
+  }
 }

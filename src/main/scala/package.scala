@@ -90,12 +90,7 @@ package object base64 {
     )
   }
   
-  val Pad = "="
   val PadB: Byte = '='
-
-  def toBinaryStr(b: Byte) =
-    Integer.toBinaryString((b & 0xFF) + 0x100).substring(1)
-
-  def toInt(xs: Array[Char]): Int =
-    Integer.parseInt(String.valueOf(xs), 2)
+  val WhiteSpaceEnc = -5
+  val EqEnc = -1
 }
