@@ -90,7 +90,7 @@ object ByteBuffers {
     val raw3 = new Array[Byte](3)
     val enc4 = new Array[Byte](4)
     while (in.hasRemaining) {
-      val rem = Math.min(3, in.remaining())
+      val rem = math.min(3, in.remaining())
       in.get(raw3, 0, rem)
       enc3to4(raw3, 0, rem, enc4, 0, alphabet.values)
       out.put(enc4)
