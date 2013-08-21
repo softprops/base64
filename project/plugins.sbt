@@ -7,5 +7,5 @@ addSbtPlugin("me.lessis" % "bintray-sbt" % "0.1.1")
 
 addSbtPlugin("me.lessis" % "ls-sbt" % "0.1.3")
 
-addSbtPlugin("me.lessis" % "cappi" % "0.1.0")
+addSbtPlugin("me.lessis" % "cappi" % "0.1.1")
 

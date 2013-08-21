@@ -28,4 +28,4 @@ seq(lsSettings:_*)
 
 (externalResolvers in LsKeys.lsync) := (resolvers in bintray.Keys.bintray).value
 
-seq(cappiTasks:_*)
+seq(cappiSettings:_*)
