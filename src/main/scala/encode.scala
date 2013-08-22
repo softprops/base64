@@ -26,7 +26,7 @@ object Encode {
 
     @annotation.tailrec
     def write(d: Int = 0, e: Int = 0): (Int, Int) =
-      if (d >= len2 ) (d, e)
+      if (d >= len2) (d, e)
       else {
         enc3to4(in, d, 3, out, e, index)
         write(d + 3, e + 4)
