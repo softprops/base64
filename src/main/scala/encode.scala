@@ -19,6 +19,7 @@ object Encode {
     val len = in.size
     val len2 = len - 2
     val estimate = (len / 3) * 4 + (if (len % 3 > 0) 4 else 0)
+    println("estimate %s" format(estimate))
     val out = new Array[Byte](estimate)
 
     @annotation.tailrec
@@ -68,17 +69,17 @@ object Encode {
     (numSigBytes: @annotation.switch) match {
       case 3 =>
         out.update(outOffset,     index(inBuff >>> 18))
-        out.update(outOffset + 1, index(inBuff >>> 12 & 0x3f))
-        out.update(outOffset + 2, index(inBuff >>> 6 & 0x3f))
-        out.update(outOffset + 3, index(inBuff & 0x3f))
+        out.update(outOffset + 1, index(inBuff >>> 12 & EncMask))
+        out.update(outOffset + 2, index(inBuff >>> 6 & EncMask))
+        out.update(outOffset + 3, index(inBuff & EncMask))
       case 2 =>
         out.update(outOffset,     index(inBuff >>> 18))
-        out.update(outOffset + 1, index(inBuff >>> 12 & 0x3f))
-        out.update(outOffset + 2, index(inBuff >>> 6 & 0x3f))
+        out.update(outOffset + 1, index(inBuff >>> 12 & EncMask))
+        out.update(outOffset + 2, index(inBuff >>> 6 & EncMask))
         out.update(outOffset + 3, Pad);
       case 1 =>
         out.update(outOffset,     index(inBuff >>> 18))
-        out.update(outOffset + 1, index(inBuff >>> 12 & 0x3f))
+        out.update(outOffset + 1, index(inBuff >>> 12 & EncMask))
         out.update(outOffset + 2, Pad)
         out.update(outOffset + 3, Pad);
     }
