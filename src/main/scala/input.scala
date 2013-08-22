@@ -4,7 +4,7 @@ import java.nio.ByteBuffer
 import java.nio.charset.Charset
 
 @annotation.implicitNotFound(
-  msg = "Compiler InputSource[T] type class instance for type ${T} not found")
+  msg = "base64 Input[T] type class instance for type ${T} not found")
 trait Input[T] {
   def apply(t: T): ByteBuffer
 }
