@@ -16,6 +16,8 @@ scalacOptions += Opts.compile.deprecation
 
 crossScalaVersions := Seq("2.9.3", "2.10.2")
 
+libraryDependencies += "org.scalatest" %% "scalatest" % "1.9.1" % "test"
+
 libraryDependencies += "commons-codec" % "commons-codec" % "1.4" % "test"
 
 libraryDependencies += "io.netty" % "netty-all" % "4.0.7.Final" % "test"
