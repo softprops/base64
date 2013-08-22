@@ -1,6 +1,8 @@
 package base64
 
 import org.apache.commons.codec.binary.Base64
+import io.netty.handler.codec.base64.{ Base64 => NettyBase64 }
+import io.netty.buffer.{ ByteBuf, Unpooled }
 import com.google.caliper.SimpleBenchmark
 
 class ByteBuffersBenchmark extends SimpleBenchmark {

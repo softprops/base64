@@ -1,6 +1,8 @@
 package base64
 
 import org.apache.commons.codec.binary.Base64
+import io.netty.handler.codec.base64.{ Base64 => NettyBase64 }
+import io.netty.buffer.{ ByteBuf, Unpooled }
 import java.nio.ByteBuffer
 
 object Bench {
@@ -21,23 +23,31 @@ object Bench {
 
     def run(times: Int = 1000, log: Boolean = false) = {
       val apache = repeat(times) { Base64.encodeBase64(bytes) }
-      val oursbb = repeat(times) {
+      val netty = repeat(times) {
+        NettyBase64.encode(Unpooled.copiedBuffer(bytes))
+      }
+      val ours = repeat(times) {
         bytebuffer.rewind()
         Encode(bytebuffer)
       }
 
       val apacheDec = repeat(times) { Base64.decodeBase64(encoded) }
-      val oursbbDec = repeat(times) {
+      val nettyDec = repeat(times) {
+        NettyBase64.decode(Unpooled.copiedBuffer(encoded))
+      }
+      val oursDec = repeat(times) {
         encodedBb.rewind()
         Decode(encodedBb)
       }
 
       if (log) {
         println("enc apache commons (byte arrays) took %s ms" format apache) // 7ms / 5000
-        println("enc ours (byte buffers)          took %s ms" format oursbb) // 43ms / 5000
+        println("enc netty (byte buf)             took %s ms" format netty) // 7ms / 5000
+        println("enc ours (byte buffers)          took %s ms" format ours) // 43ms / 5000
 
         println("dec apache commons (byte arrays) took %s ms" format apacheDec) // 7ms / 5000
-        println("dec ours (byte buffers)            took %s ms" format oursbbDec)   // 4980ms / 5000
+        println("dec netty (byte buf)             took %s ms" format nettyDec) // 7ms / 5000
+        println("dec ours (byte buffers)          took %s ms" format oursDec)   // 4980ms / 5000
       }
     }
 
