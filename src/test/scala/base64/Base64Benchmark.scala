@@ -14,6 +14,14 @@ class Base64Benchmark extends SimpleBenchmark {
     Base64.decodeBase64(Bench.encoded)
   }
 
+  def timeNettyEnc(n: Int) = for (i <- 0 to n) {
+    NettyBase64.encode(Unpooled.copiedBuffer(Bench.bytes))
+  }
+
+  def timeNettyDec(n: Int) = for (i <- 0 to n) {
+    NettyBase64.decode(Unpooled.copiedBuffer(Bench.encoded))
+  }
+
   def timeOurEnc(n: Int) = for (i <- 0 to n) {
     val b = Bench.bytebuffer
     b.rewind()
