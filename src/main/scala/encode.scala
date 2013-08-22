@@ -20,15 +20,13 @@ object Encode {
     val len2 = len - 2
     val estimate = (len / 3) * 4 + (if (len % 3 > 0) 4 else 0)
     val out = new Array[Byte](estimate)
-    val raw3 = new Array[Byte](3)
-    val enc4 = new Array[Byte](4)
 
     @annotation.tailrec
     def write(d: Int = 0, e: Int = 0): (Int, Int) =
       if (d >= len2 ) (d, e)
       else {
         enc3to4(in, d, 3, out, e, index)
-        write(d + 4, e + 4)
+        write(d + 3, e + 4)
       }
 
     val (d, e) = write()
