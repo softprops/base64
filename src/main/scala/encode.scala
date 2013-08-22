@@ -16,6 +16,7 @@ object Encode {
 
   def encodeWith[T : Input](alphabet: Alphabet)(ins: T) = {
     val in =  implicitly[Input[T]].apply(ins)
+    val index = alphabet.values
     val len = in.remaining()
     val estEncLen = (len / 3) * 4 + (if (len % 3 > 0) 4 else 0)
     val out  = ByteBuffer.allocate(estEncLen).order(in.order())
@@ -24,10 +25,10 @@ object Encode {
     while (in.hasRemaining) {
       val rem = math.min(3, in.remaining())
       in.get(raw3, 0, rem)
-      enc3to4(raw3, 0, rem, enc4, 0, alphabet.values)
+      enc3to4(raw3, 0, rem, enc4, 0, index)
       out.put(enc4)
     }
-    out.slice()
+    out//.slice()
   }
 
   private def enc3to4(
