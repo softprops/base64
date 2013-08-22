@@ -23,27 +23,11 @@ class Base64Benchmark extends SimpleBenchmark {
   }
 
   def timeOurEnc(n: Int) = for (i <- 0 to n) {
-//    val b = Bench.bytebuffer
-//    b.rewind()
     Encode(Bench.bytes)
   }
 
   def timeOurDecode(n: Int) = for (i <- 0 to n) {
-//    val b = Bench.encodedBb
-//    b.rewind()
     Decode(Bench.encoded)
   }
-
-//  def timeOurUrlsafeEnc(n: Int) = for (i <- 0 to n) {
-//    val b = Bench.bytebuffer
-//    b.rewind()
-//    Encode.urlSafe(b)
-//  }
-
-//  def timeOurUrlsafeDec(n: Int) = for (i <- 0 to n) {
-//    val b = Bench.encodedBb
-//    b.rewind()
-//    Decode.urlSafe(b)
-//  }
 }
 

@@ -55,12 +55,12 @@ For encoding and decoding I found the following general repeating performance pa
 when testing 15,000 runs for each library for each operation.
 
 ```
-enc apache commons (byte arrays) took 123 ms
-enc netty (byte buf)             took 66 ms
-enc ours (byte buffers)          took 116 ms
-dec apache commons (byte arrays) took 69 ms
-dec netty (byte buf)             took 163 ms
-dec ours (byte buffers)          took 78 ms
+enc apache commons (byte arrays) took 102 ms
+enc netty (byte buf)             took 115 ms
+enc ours (byte arrays)           took 126 ms
+dec apache commons (byte arrays) took 82 ms
+dec netty (byte buf)             took 175 ms
+dec ours (byte arrays)           took 101 ms
 ```
 
 Take this with a grain of salt. None of these will be the performance bottle neck of your application. This was
