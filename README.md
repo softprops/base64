@@ -37,9 +37,8 @@ new String(base64.Encode.urlSafe("hello world?")) // aGVsbG8gd29ybGQ_
 
 A dual for each is provided with the `Decode` object.
 
-scala
-```
-base64.Decode.urlSafe(base64.Encode.urlSafe("hello world")) // hello world?
+```scala
+new String(base64.Decode.urlSafe(base64.Encode.urlSafe("hello world"))) // hello world?
 ```
 
 ## Why
