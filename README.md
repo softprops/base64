@@ -2,9 +2,15 @@
 
 > the 64th base of rfc4648
 
+This is a library for base64 encoding and decoding raw data.
+
+## Install
+
+(todo)
+
 ## Usage
 
-This library encodes and decodes Byte Arrays but exposes a typeclass interface for providing input defined as 
+This library encodes and decodes Byte Arrays but exposes a [typeclass interface](https://github.com/softprops/base64/blob/master/src/main/scala/input.scala#L8-L10) for providing input defined as 
 
 ```scala
 trait Input[T] {
@@ -25,14 +31,15 @@ This returns a Byte Array. To make this output human readable you may wish to cr
 When working with web applications its a common need to base64 encode information in a urlsafe way. Do do so
 just invoke `urlSafe` with input on the `Encode` object
 
-
+```scala
+new String(base64.Encode.urlSafe("hello world?")) // aGVsbG8gd29ybGQ_
 ```
-new String(base64.Encode.urlSafe("Man"))
-```
 
+A dual for each is provided with the `Decode` object.
 
+scala
 ```
-base64.Decode()
+base64.Decode.urlSafe(base64.Encode.urlSafe("hello world")) // hello world?
 ```
 
 ## Why
@@ -52,7 +59,7 @@ the encoding and decoding performance with the same input data against apache co
 netty 4.0.7.final base64.
 
 For encoding and decoding I found the following general repeating performance patterns
-when testing 15,000 runs for each library for each operation.
+when testing [15,000 runs](https://github.com/softprops/base64/blob/master/src/test/scala/base64/bench.scala#L53) for each library for each operation.
 
 ```
 enc apache commons (byte arrays) took 102 ms
