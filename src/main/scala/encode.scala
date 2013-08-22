@@ -1,5 +1,7 @@
 package base64
 
+import java.util.Arrays
+
 /** Base64 encodings. This implementation does not support line breaks */
 object Encode {
 
@@ -13,7 +15,7 @@ object Encode {
   def apply[T : Input](in: T) =
     encodeWith(StdAlphabet,in)
 
-  def encodeWith[T : Input](alphabet: Alphabet, ins: T) = {
+  def encodeWith[T : Input](alphabet: Alphabet, ins: T): Array[Byte] = {
     val in =  implicitly[Input[T]].apply(ins)
     val index = alphabet.values
     val len = in.size
@@ -37,11 +39,7 @@ object Encode {
         e + 4
       } else e
 
-    if (e < out.size - 1) {
-      val resized = new Array[Byte](e)
-      System.arraycopy(out, 0, resized, 0, e)
-      resized
-    } else out
+    if (e < out.size - 1) Arrays.copyOf(out, e) else out
   }
 
   private def enc3to4(

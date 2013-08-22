@@ -1,5 +1,7 @@
 package base64
 
+import java.util.Arrays
+
 object Decode {
 
   def urlSafe[T : Input](in: T) =
@@ -46,10 +48,7 @@ object Decode {
       } else Left((at, index(at) & 0xFF))
     }
     read().right.map {
-      case outpos =>
-        val resized = new Array[Byte](outpos)
-        System.arraycopy(out, 0, resized, 0, outpos)
-        resized
+      case len => Arrays.copyOf(out, len)
     }
   }
 
