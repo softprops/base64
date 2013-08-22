@@ -5,7 +5,7 @@ import io.netty.handler.codec.base64.{ Base64 => NettyBase64 }
 import io.netty.buffer.{ ByteBuf, Unpooled }
 import com.google.caliper.SimpleBenchmark
 
-class ByteBuffersBenchmark extends SimpleBenchmark {
+class Base64Benchmark extends SimpleBenchmark {
   def timeApacheEnc(n: Int) = for (i <- 0 to n) {
     Base64.encodeBase64(Bench.bytes)
   }
