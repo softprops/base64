@@ -8,14 +8,14 @@ object Encode {
   /** Encodes an array of bytes into a base64 encoded string
    *  which accounts for url encoding provisions */
   def urlSafe[T : Input](in: T) =
-    encodeWith(URLSafeAlphabet,in)
+    encodeWith(URLSafeAlphabet)(in)
 
  /** Encodes an array of bytes into a base64 encoded string
    *   <http://www.apps.ietf.org/rfc/rfc4648.html> */
   def apply[T : Input](in: T) =
-    encodeWith(StdAlphabet,in)
+    encodeWith(StdAlphabet)(in)
 
-  def encodeWith[T : Input](alphabet: Alphabet, ins: T): Array[Byte] = {
+  def encodeWith[T : Input](alphabet: Alphabet)(ins: T): Array[Byte] = {
     val in =  implicitly[Input[T]].apply(ins)
     val index = alphabet.values
     val len = in.size
