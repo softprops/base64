@@ -21,7 +21,6 @@ object Encode {
     val len = in.size
     val len2 = len - 2
     val estimate = (len / 3) * 4 + (if (len % 3 > 0) 4 else 0)
-    println("estimate %s" format(estimate))
     val out = new Array[Byte](estimate)
 
     @annotation.tailrec
@@ -31,15 +30,13 @@ object Encode {
         enc3to4(in, d, 3, out, e, index)
         write(d + 3, e + 4)
       }
-
     val (d, e) = write()
     val fe = // extra padding
       if (d < len) {
         enc3to4(in, d, len - d, out, e, index)
         e + 4
       } else e
-
-    if (e < out.size - 1) Arrays.copyOf(out, e) else out
+    if (fe < out.size - 1) Arrays.copyOf(out, fe) else out
   }
 
   private def enc3to4(
@@ -48,7 +45,7 @@ object Encode {
     numSigBytes: Int, 
     out: Array[Byte],
     outOffset: Int,
-    index: IndexedSeq[Byte]) {
+    index: IndexedSeq[Byte]) = {
 
     //           1         2         3
     // 01234567890123456789012345678901 Bit position
@@ -61,25 +58,30 @@ object Encode {
     // significant bytes passed in the array.
     // We have to shift left 24 in order to flush out the 1's that appear
     // when Java treats a value as negative that is cast from a byte to an int.
-    val inBuff = (if (numSigBytes > 0) in(inOffset)     << 24 >>> 8 else 0)  |
-                 (if (numSigBytes > 1) in(inOffset + 1) << 24 >>> 16 else 0) |
-                 (if (numSigBytes > 2) in(inOffset + 2) << 24 >>> 24 else 0)
+    val inBuff = (if (numSigBytes > 0) (in(inOffset)     << 24) >>> 8 else 0)  |
+                 (if (numSigBytes > 1) (in(inOffset + 1) << 24) >>> 16 else 0) |
+                 (if (numSigBytes > 2) (in(inOffset + 2) << 24) >>> 24 else 0)
     (numSigBytes: @annotation.switch) match {
       case 3 =>
         out.update(outOffset,     index(inBuff >>> 18))
         out.update(outOffset + 1, index(inBuff >>> 12 & EncMask))
         out.update(outOffset + 2, index(inBuff >>> 6 & EncMask))
         out.update(outOffset + 3, index(inBuff & EncMask))
+        out
       case 2 =>
         out.update(outOffset,     index(inBuff >>> 18))
         out.update(outOffset + 1, index(inBuff >>> 12 & EncMask))
         out.update(outOffset + 2, index(inBuff >>> 6 & EncMask))
-        out.update(outOffset + 3, Pad);
+        out.update(outOffset + 3, Pad)
+        out
       case 1 =>
         out.update(outOffset,     index(inBuff >>> 18))
         out.update(outOffset + 1, index(inBuff >>> 12 & EncMask))
         out.update(outOffset + 2, Pad)
-        out.update(outOffset + 3, Pad);
+        out.update(outOffset + 3, Pad)
+        out
+      case _ =>
+        out
     }
   }
 }
