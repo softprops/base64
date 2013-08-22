@@ -2,33 +2,49 @@ package base64
 
 import java.nio.ByteBuffer
 
+/** Base64 encodings. This implementation does not support line breaks */
 object Encode {
 
   /** Encodes an array of bytes into a base64 encoded string
    *  which accounts for url encoding provisions */
   def urlSafe[T : Input](in: T) =
-    encodeWith(URLSafeAlphabet)(in)
+    encodeWith(URLSafeAlphabet,in)
 
  /** Encodes an array of bytes into a base64 encoded string
    *   <http://www.apps.ietf.org/rfc/rfc4648.html> */
   def apply[T : Input](in: T) =
-    encodeWith[T](StdAlphabet)(in)
+    encodeWith(StdAlphabet,in)
 
-  def encodeWith[T : Input](alphabet: Alphabet)(ins: T) = {
+  def encodeWith[T : Input](alphabet: Alphabet, ins: T) = {
     val in =  implicitly[Input[T]].apply(ins)
     val index = alphabet.values
-    val len = in.remaining()
-    val estEncLen = (len / 3) * 4 + (if (len % 3 > 0) 4 else 0)
-    val out  = ByteBuffer.allocate(estEncLen).order(in.order())
+    val len = in.size
+    val len2 = len - 2
+    val estimate = (len / 3) * 4 + (if (len % 3 > 0) 4 else 0)
+    val out = new Array[Byte](estimate)
     val raw3 = new Array[Byte](3)
     val enc4 = new Array[Byte](4)
-    while (in.hasRemaining) {
-      val rem = math.min(3, in.remaining())
-      in.get(raw3, 0, rem)
-      enc3to4(raw3, 0, rem, enc4, 0, index)
-      out.put(enc4)
-    }
-    out//.slice()
+
+    @annotation.tailrec
+    def write(d: Int = 0, e: Int = 0): (Int, Int) =
+      if (d >= len2 ) (d, e)
+      else {
+        enc3to4(in, d, 3, out, e, index)
+        write(d + 4, e + 4)
+      }
+
+    val (d, e) = write()
+    val fe = // extra padding
+      if (d < len) {
+        enc3to4(in, d, len - d, out, e, index)
+        e + 4
+      } else e
+
+    if (e < out.size - 1) {
+      val resized = new Array[Byte](e)
+      System.arraycopy(out, 0, resized, 0, e)
+      resized
+    } else out
   }
 
   private def enc3to4(
@@ -39,7 +55,7 @@ object Encode {
     outOffset: Int,
     index: IndexedSeq[Byte]) {
 
-    //           1         2         3  
+    //           1         2         3
     // 01234567890123456789012345678901 Bit position
     // --------000000001111111122222222 Array position from threeBytes
     // --------|    ||    ||    ||    | Six bit groups to index ALPHABET

@@ -28,7 +28,7 @@ object Bench {
       }
       val ours = repeat(times) {
         bytebuffer.rewind()
-        Encode(bytebuffer)
+        Encode(bytes)//bytebuffer)
       }
 
       val apacheDec = repeat(times) { Base64.decodeBase64(encoded) }
@@ -37,17 +37,17 @@ object Bench {
       }
       val oursDec = repeat(times) {
         encodedBb.rewind()
-        Decode(encodedBb)
+        Decode(encoded)//Bb)
       }
 
       if (log) {
         println("enc apache commons (byte arrays) took %s ms" format apache) // 23ms / 15000
-        println("enc netty (byte buf)             took %s ms" format netty) // 110ms / 15000
-        println("enc ours (byte buffers)          took %s ms" format ours) // 139ms / 15000
+        println("enc netty (byte buf)             took %s ms" format netty) // 127ms / 15000
+        println("enc ours (byte buffers)          took %s ms" format ours) // 125ms / 15000
 
-        println("dec apache commons (byte arrays) took %s ms" format apacheDec) // 38ms / 15000
-        println("dec netty (byte buf)             took %s ms" format nettyDec) // 186ms / 15000
-        println("dec ours (byte buffers)          took %s ms" format oursDec)   // 120ms / 15000
+        println("dec apache commons (byte arrays) took %s ms" format apacheDec) // 58ms / 15000
+        println("dec netty (byte buf)             took %s ms" format nettyDec) // 170ms / 15000
+        println("dec ours (byte buffers)          took %s ms" format oursDec)   // 99ms / 15000
       }
     }
 

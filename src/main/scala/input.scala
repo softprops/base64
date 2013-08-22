@@ -6,16 +6,16 @@ import java.nio.charset.Charset
 @annotation.implicitNotFound(
   msg = "base64 Input[T] type class instance for type ${T} not found")
 trait Input[T] {
-  def apply(t: T): ByteBuffer
+  def apply(t: T): Array[Byte]
 }
 
 object Input {
   implicit object Direct extends Input[ByteBuffer] {
-    def apply(in: ByteBuffer) = in
+    def apply(in: ByteBuffer) = in.array
   }
 
   implicit object Bytes extends Input[Array[Byte]] {
-    def apply(in: Array[Byte]) = ByteBuffer.wrap(in)
+    def apply(in: Array[Byte]) = in//ByteBuffer.wrap(in)
   }
 
   implicit object Utf8Str extends Input[String] {
