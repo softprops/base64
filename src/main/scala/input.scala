@@ -10,12 +10,12 @@ trait Input[T] {
 }
 
 object Input {
-  implicit object Direct extends Input[ByteBuffer] {
+  implicit object ByteBuffers extends Input[ByteBuffer] {
     def apply(in: ByteBuffer) = in.array
   }
 
   implicit object Bytes extends Input[Array[Byte]] {
-    def apply(in: Array[Byte]) = in//ByteBuffer.wrap(in)
+    def apply(in: Array[Byte]) = in
   }
 
   implicit object Utf8Str extends Input[String] {

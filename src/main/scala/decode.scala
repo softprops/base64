@@ -1,7 +1,5 @@
 package base64
 
-import java.nio.ByteBuffer
-
 object Decode {
 
   def urlSafe[T : Input](in: T) =
@@ -19,14 +17,13 @@ object Decode {
   def decodeWith[T : Input](alphabet: Alphabet)(ins: T) = {
     val in = implicitly[Input[T]].apply(ins)
     val len = in.size
-    val off = 0
     val len34 = len * 3 / 4
     val out = new Array[Byte](len34)
     val b4 = new Array[Byte](4)
     val index = alphabet.reversed
-    val readBounds = off + len
+    val readBounds = len
     def read(
-      at: Int = off,
+      at: Int = 0,
       b4Posn: Int = 0,
       outOffset: Int = 0
     ): Either[(Int, Int), Int] = if (at >= readBounds) Right(outOffset) else {

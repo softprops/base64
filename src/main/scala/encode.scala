@@ -1,7 +1,5 @@
 package base64
 
-import java.nio.ByteBuffer
-
 /** Base64 encodings. This implementation does not support line breaks */
 object Encode {
 
