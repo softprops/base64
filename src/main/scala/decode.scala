@@ -54,7 +54,7 @@ object Decode {
       } else Left(InvalidByte(at, index(at) & 0xFF))
     }
     if (len < 4) Right(Array()) else read().right.map {
-      case len => if (len == 1 && out(0) == -1) Array() else Arrays.copyOf(out, len)
+      case len => if (len == 1 && out(0) == -1) /*all padding*/ Array() else Arrays.copyOf(out, len)
     }
   }
 
