@@ -32,11 +32,10 @@ object Encode {
       if (d >= len2) (d, e)
       else {
         enc3to4(in, d, 3, out, e, index)
-        val (nextE, nextCol) = if (multiline && col + 4 >= MaxLine) {
+        if (multiline && col + 4 >= MaxLine) {
           out.update(e + 4, NewLine)
-          (e + 5, 0)
-        } else (e + 4, col + 4)
-        write(d + 3, nextE, nextCol)
+          write(d + 3, e + 5, 0)
+        } else write(d + 3, e + 4, col + 4)
       }
 
     val (d, e) = write()
