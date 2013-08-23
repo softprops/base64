@@ -24,6 +24,7 @@ object Decode {
     val b4 = new Array[Byte](4)
     val index = alphabet.reversed
     val readBounds = len
+
     def read(
       at: Int = 0,
       b4Posn: Int = 0,
@@ -40,13 +41,15 @@ object Decode {
             val cnt = dec4to3(
               b4, 0, out, outOffset, index
             )
-            if (sbiCrop == Pad) Right(outOffset) else read(
-              nextByte, 0, outOffset + cnt
+            val curOffset = outOffset + cnt
+            if (sbiCrop == Pad) Right(curOffset) else read(
+              nextByte, 0, curOffset
             )
           } else read(nextByte, nextB4Posn, outOffset)
         } else read(nextByte, b4Posn, outOffset)
       } else Left((at, index(at) & 0xFF))
     }
+
     read().right.map {
       case len => Arrays.copyOf(out, len)
     }
