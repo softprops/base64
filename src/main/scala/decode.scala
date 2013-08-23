@@ -6,7 +6,6 @@ object Decode {
 
   trait Failure
   case class InvalidByte(index: Int, dec: Int) extends Failure
-  case object InvalidLength extends Failure
 
   def urlSafe[T : Input](in: T) =
     decodeWith(URLSafeAlphabet)(in)
@@ -38,7 +37,6 @@ object Decode {
       val sbiCrop = (in(at) & 0x7f).toByte  // Only the low seven bits
       val sbiDecode = index(sbiCrop)
       val nextByte = at + 1
-
       if (sbiDecode >= WhiteSpaceEnc) {
         if (sbiDecode >= EqEnc) {
           b4.update(b4Posn, sbiCrop)
@@ -55,10 +53,8 @@ object Decode {
         } else read(nextByte, b4Posn, outOffset)
       } else Left(InvalidByte(at, index(at) & 0xFF))
     }
-    if (in.isEmpty) Right(Array())
-    else if (len < 4) Left(InvalidLength)
-    else read().right.map {
-      case len => println("expected %s actual %s"format(out.size, len));Arrays.copyOf(out, len)
+    if (len < 4) Right(Array()) else read().right.map {
+      case len => if (len == 1 && out(0) == -1) Array() else Arrays.copyOf(out, len)
     }
   }
 
