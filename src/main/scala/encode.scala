@@ -7,29 +7,38 @@ object Encode {
 
   /** Encodes an array of bytes into a base64 encoded string
    *  which accounts for url encoding provisions */
-  def urlSafe[T : Input](in: T) =
-    encodeWith(URLSafeAlphabet)(in)
+  def urlSafe[T : Input](in: T, multiline: Boolean = false) =
+    encodeWith(URLSafeAlphabet)(in, multiline)
 
  /** Encodes an array of bytes into a base64 encoded string
    *   <http://www.apps.ietf.org/rfc/rfc4648.html> */
-  def apply[T : Input](in: T) =
-    encodeWith(StdAlphabet)(in)
+  def apply[T : Input](in: T, multiline: Boolean = false) =
+    encodeWith(StdAlphabet)(in, multiline)
 
-  def encodeWith[T : Input](alphabet: Alphabet)(ins: T): Array[Byte] = {
+  def encodeWith[T : Input](
+    alphabet: Alphabet)
+    (ins: T, multiline: Boolean = false): Array[Byte] = {
     val in =  implicitly[Input[T]].apply(ins)
     val index = alphabet.values
     val len = in.size
     val len2 = len - 2
-    val estimate = (len / 3) * 4 + (if (len % 3 > 0) 4 else 0)
+    val estimate = (len / 3) * 4 + (if (len % 3 > 0) 4 else 0) match {
+      case est => if (multiline) est + (est / MaxLine) else est
+    }
     val out = new Array[Byte](estimate)
 
     @annotation.tailrec
-    def write(d: Int = 0, e: Int = 0): (Int, Int) =
+    def write(d: Int = 0, e: Int = 0, col: Int = 0): (Int, Int) =
       if (d >= len2) (d, e)
       else {
         enc3to4(in, d, 3, out, e, index)
-        write(d + 3, e + 4)
+        val (nextE, nextCol) = if (multiline && col + 4 >= MaxLine) {
+          out.update(e + 4, NewLine)
+          (e + 5, 0)
+        } else (e + 4, col + 4)
+        write(d + 3, nextE, nextCol)
       }
+
     val (d, e) = write()
     val fe = // extra padding
       if (d < len) {
