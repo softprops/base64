@@ -1,0 +1,17 @@
+{
+  "organization" : "me.lessis",
+  "name" : "base64",
+  "version" : "0.1.0",
+  "description" : "base64",
+  "site" : "https://github.com/softprops/base64/#readme",
+  "tags" : [ "base64", "encoding", "rfc4648" ],
+  "docs" : "",
+  "resolvers" : [ "http://dl.bintray.com/content/softprops/maven" ],
+  "dependencies" : [ ],
+  "scalas" : [ "2.9.3", "2.10.2" ],
+  "licenses" : [ {
+    "name" : "MIT",
+    "url" : "https://github.com/softprops/base64/blob/0.1.0/LICENSE"
+  } ],
+  "sbt" : false
+}
