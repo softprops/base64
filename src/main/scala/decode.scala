@@ -15,12 +15,6 @@ object Decode {
   def apply[T : Input](in: T) =
     decodeWith(StdAlphabet)(in)
 
-  /**
-   *  @return Either[(Int, Int), ByteBuffer] where the Left is
-   *    is the position of an invalid byte and its decimal prepresentation
-   *    and the Right contains a ByteBuffer with the base64 decoded preresentation
-   *    of in.
-   */
   def decodeWith[T : Input](
     alphabet: Alphabet)(ins: T): Either[Failure, Array[Byte]] = {
     val in = implicitly[Input[T]].apply(ins)
