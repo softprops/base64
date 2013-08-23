@@ -46,7 +46,6 @@ Fixing the width of base64 encoded data is, in some cases, a desireble property.
 
 ```scala
 val in = "Base64 is a group of similar binary-to-text encoding schemes that represent binary data in an ASCII string format by translating it into a radix-64 representation. The term Base64 originates from a specific MIME content transfer encoding."
-in: java.lang.String = Base64 is a group of similar binary-to-text encoding schemes that represent binary data in an ASCII string format by translating it into a radix-64 representation. The term Base64 originates from a specific MIME content transfer encoding.
 
 new String(base64.Encode(in, multiline = true))
 ```
