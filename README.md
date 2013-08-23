@@ -61,12 +61,12 @@ For encoding and decoding I found the following general repeating performance pa
 when testing [15,000 runs](https://github.com/softprops/base64/blob/master/src/test/scala/base64/bench.scala#L53) for each library for each operation.
 
 ```
-enc apache commons (byte arrays) took 100 ms
-enc netty (byte buf)             took 83 ms
-enc ours (byte arrays)           took 142 ms
-dec apache commons (byte arrays) took 72 ms
-dec netty (byte buf)             took 161 ms
-dec ours (byte arrays)           took 89 ms
+enc apache commons (byte arrays) took 97 ms
+enc netty (byte buf)             took 95 ms
+enc ours (byte arrays)           took 121 ms
+dec apache commons (byte arrays) took 77 ms
+dec netty (byte buf)             took 171 ms
+dec ours (byte arrays)           took 85 ms
 ```
 
 Take this with a grain of salt. None of these will be the performance bottle neck of your application. This was
