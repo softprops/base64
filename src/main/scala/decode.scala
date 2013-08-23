@@ -4,6 +4,8 @@ import java.util.Arrays
 
 object Decode {
 
+  val Empty = Array.empty[Byte]
+
   trait Failure
   case class InvalidByte(index: Int, dec: Int) extends Failure
 
@@ -53,9 +55,9 @@ object Decode {
         } else read(nextByte, b4Posn, outOffset)
       } else Left(InvalidByte(at, index(at) & 0xFF))
     }
-    if (len < 4) Right(Array()) else read().right.map {
+    if (len < 4) Right(Empty) else read().right.map {
       case len =>
-        if (len == 1 && out(0) == -1) /*all padding*/ Array()
+        if (len == 1 && out(0) == -1) /*all padding*/ Empty
         else Arrays.copyOf(out, len)
     }
   }
