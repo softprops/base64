@@ -21,19 +21,47 @@ trait Input[T] {
 Instances of this typeclass are defined for `java.nio.ByteBuffer`, `String`, `(String, java.nio.charset.Charset)`, and
 `Array[Bytes]`. 
 
+### Standard Encoding
+
 To base64 encode input simply invoke the `Encode` objects `apply` method
 
 ```scala
 base64.Encode("Man") 
 ```
 
-This returns a Byte Array. To make this output human readable you may wish to create a String from its output.
-When working with web applications its a common need to base64 encode information in a urlsafe way. Do do so
+This returns a Byte Array. To make this output human readable, you may wish to create a String from its output.
+
+### URL-Safe Encoding
+
+When working with web applications its a common need to base64 encode information in a urlsafe way. Do do so with this library
 just invoke `urlSafe` with input on the `Encode` object
 
 ```scala
 new String(base64.Encode.urlSafe("hello world?")) // aGVsbG8gd29ybGQ_
 ```
+
+### Multiline Encoding
+
+Fixing the width of base64 encoded data is, in some cases, a desireble property. In these cases, set the `multiline` flag to true when encoding.
+
+```scala
+val in = "Base64 is a group of similar binary-to-text encoding schemes that represent binary data in an ASCII string format by translating it into a radix-64 representation. The term Base64 originates from a specific MIME content transfer encoding."
+in: java.lang.String = Base64 is a group of similar binary-to-text encoding schemes that represent binary data in an ASCII string format by translating it into a radix-64 representation. The term Base64 originates from a specific MIME content transfer encoding.
+
+new String(base64.Encode(in, multiline = true))
+```
+
+will produce 
+
+```
+QmFzZTY0IGlzIGEgZ3JvdXAgb2Ygc2ltaWxhciBiaW5hcnktdG8tdGV4dCBlbmNvZGluZyBzY2hl
+bWVzIHRoYXQgcmVwcmVzZW50IGJpbmFyeSBkYXRhIGluIGFuIEFTQ0lJIHN0cmluZyBmb3JtYXQg
+YnkgdHJhbnNsYXRpbmcgaXQgaW50byBhIHJhZGl4LTY0IHJlcHJlc2VudGF0aW9uLiBUaGUgdGVy
+bSBCYXNlNjQgb3JpZ2luYXRlcyBmcm9tIGEgc3BlY2lmaWMgTUlNRSBjb250ZW50IHRyYW5zZmVy
+IGVuY29kaW5nLg==
+```
+
+### Decoding
 
 A dual for each is provided with the `Decode` object.
 
