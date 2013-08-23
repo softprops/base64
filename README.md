@@ -6,7 +6,23 @@ This is a library for base64 encoding and decoding raw data.
 
 ## Install
 
-(todo)
+Via the copy and paste method
+
+```scala
+resolvers += "softprops-maven" at "http://dl.bintray.com/content/softprops/maven"
+
+libraryDependencies += "me.lessis" %% "base64" % "0.1.0"
+```
+
+Via [a more civilized method](https://github.com/softprops/ls#readme) which will do the same without all the manual work.
+
+    > ls-install base64
+            
+_Note_ If you are a [bintray-sbt](https://github.com/softprops/bintray-sbt#readme) user you can optionally specify the resolver as
+                        
+```scala
+resolvers += bintray.Opts.resolver.repo("softprops", "maven")
+```
 
 ## Usage
 
