@@ -1,0 +1,13 @@
+## Initial release
+
+This is the first release of [base64](https://github.com/softprops/base64/#readme), a library for encoding raw data into its radix-64 representation.
+
+This library was made with ❤ in the spirit of [only doing one thing](https://github.com/softprops/base64/#why) without extra fanfare and doing it with [comparable performance](https://github.com/softprops/base64/#performance) to alternatives which all carry extra baggage.
+
+Basic usage is as simple as 
+
+     val payload = "Hadoop online... Caches warmed... Engage!"
+     base64.Decode(base64.Encode(payload))
+           .right.map(_.sameElements(payload))
+
+For more engagement, see the project's [readme](https://github.com/softprops/base64/#readme)
