@@ -36,13 +36,13 @@ object Bench {
       }
 
       if (log) {
-        println("enc apache commons (byte arrays) took %s ms" format apache) // 23ms / 15000
-        println("enc netty (byte buf)             took %s ms" format netty) // 127ms / 15000
-        println("enc ours (byte arrays)           took %s ms" format ours) // 125ms / 15000
+        println("enc apache commons (byte arrays) took %s ms" format apache) // 99ms / 15000
+        println("enc netty (byte buf)             took %s ms" format netty) // 74ms / 15000
+        println("enc ours (byte arrays)           took %s ms" format ours) // 151ms / 15000
 
-        println("dec apache commons (byte arrays) took %s ms" format apacheDec) // 58ms / 15000
-        println("dec netty (byte buf)             took %s ms" format nettyDec) // 170ms / 15000
-        println("dec ours (byte arrays)           took %s ms" format oursDec)   // 99ms / 15000
+        println("dec apache commons (byte arrays) took %s ms" format apacheDec) // 76ms / 15000
+        println("dec netty (byte buf)             took %s ms" format nettyDec) // 161ms / 15000
+        println("dec ours (byte arrays)           took %s ms" format oursDec)   // 92ms / 15000
       }
     }
 
