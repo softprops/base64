@@ -4,6 +4,10 @@ import java.util.Arrays
 
 object Decode {
 
+  trait Failure
+  case class InvalidByte(index: Int, dec: Int) extends Failure
+  case object InvalidLength extends Failure
+
   def urlSafe[T : Input](in: T) =
     decodeWith(URLSafeAlphabet)(in)
 
@@ -16,7 +20,8 @@ object Decode {
    *    and the Right contains a ByteBuffer with the base64 decoded preresentation
    *    of in.
    */
-  def decodeWith[T : Input](alphabet: Alphabet)(ins: T) = {
+  def decodeWith[T : Input](
+    alphabet: Alphabet)(ins: T): Either[Failure, Array[Byte]] = {
     val in = implicitly[Input[T]].apply(ins)
     val len = in.size
     val len34 = len * 3 / 4
@@ -29,10 +34,11 @@ object Decode {
       at: Int = 0,
       b4Posn: Int = 0,
       outOffset: Int = 0
-    ): Either[(Int, Int), Int] = if (at >= readBounds) Right(outOffset) else {
+    ): Either[Failure, Int] = if (at >= readBounds) Right(outOffset) else {
       val sbiCrop = (in(at) & 0x7f).toByte  // Only the low seven bits
       val sbiDecode = index(sbiCrop)
       val nextByte = at + 1
+
       if (sbiDecode >= WhiteSpaceEnc) {
         if (sbiDecode >= EqEnc) {
           b4.update(b4Posn, sbiCrop)
@@ -47,11 +53,12 @@ object Decode {
             )
           } else read(nextByte, nextB4Posn, outOffset)
         } else read(nextByte, b4Posn, outOffset)
-      } else Left((at, index(at) & 0xFF))
+      } else Left(InvalidByte(at, index(at) & 0xFF))
     }
-
-    read().right.map {
-      case len => Arrays.copyOf(out, len)
+    if (in.isEmpty) Right(Array())
+    else if (len < 4) Left(InvalidLength)
+    else read().right.map {
+      case len => println("expected %s actual %s"format(out.size, len));Arrays.copyOf(out, len)
     }
   }
 
@@ -61,7 +68,7 @@ object Decode {
     out: Array[Byte],
     outOffset: Int,
     index: Array[Byte]
-  ): Int = {
+  ): Int =
     if (in(inOffset + 2) == Pad) { // Dk==
       val outBuff = ((index(in(inOffset)) & 0xFF)      << 18) |
                     ((index(in(inOffset + 1)) & 0xFF ) << 12)
@@ -84,5 +91,4 @@ object Decode {
       out.update(outOffset + 2, (outBuff).toByte)
       3
     }
-  }
 }
