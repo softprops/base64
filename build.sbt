@@ -26,9 +26,9 @@ bintray.Keys.packageLabels in bintray.Keys.bintray := Seq("base64", "encoding", 
 
 seq(lsSettings:_*)
 
-(LsKeys.tags in LsKeys.lsync) := (bintray.Keys.packageLabels in bintray.Keys.bintray).value
+LsKeys.tags in LsKeys.lsync := (bintray.Keys.packageLabels in bintray.Keys.bintray).value
 
-(externalResolvers in LsKeys.lsync) := (resolvers in bintray.Keys.bintray).value
+externalResolvers in LsKeys.lsync := (resolvers in bintray.Keys.bintray).value
 
 seq(cappiSettings:_*)
 
