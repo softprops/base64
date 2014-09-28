@@ -17,7 +17,7 @@ object Encode {
 
   def encodeWith[T : Input](
     alphabet: Alphabet)
-    (ins: T, multiline: Boolean = false): Array[Byte] = {
+   (ins: T, multiline: Boolean = false): Array[Byte] = {
     val in =  implicitly[Input[T]].apply(ins)
     val index = alphabet.values
     val len = in.size
