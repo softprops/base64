@@ -1,0 +1,5 @@
+## Changes
+
+* Made `Input` type class instances somewhat more accessible for java users by using vals instead of object definitions
+
+* Dropped support for Scala 2.9.3 added support for scala 2.11.*
