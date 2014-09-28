@@ -10,20 +10,27 @@ trait Input[T] {
 }
 
 object Input {
-  implicit object ByteBuffers extends Input[ByteBuffer] {
-    def apply(in: ByteBuffer) = in.array
-  }
+  private[this] val utf8 = Charset.forName("UTF-8")
 
-  implicit object Bytes extends Input[Array[Byte]] {
-    def apply(in: Array[Byte]) = in
-  }
+  implicit val ByteBuffers: Input[ByteBuffer] =
+    new Input[ByteBuffer] {
+      def apply(in: ByteBuffer) = in.array
+    }
 
-  implicit object Utf8Str extends Input[String] {
-    def apply(in: String) = Bytes(in.getBytes("utf-8"))
-  }
+  implicit val Bytes: Input[Array[Byte]] =
+    new Input[Array[Byte]] {
+      def apply(in: Array[Byte]) = in
+    }
 
-  implicit object Str extends Input[(String, Charset)] {
-    def apply(in: (String, Charset)) =
-      Bytes(in._1.getBytes(in._2.name()))
-  }
+  implicit val Utf8Str: Input[String] =
+    new Input[String] {
+      def apply(in: String) =
+        Str(in, utf8)
+    }
+
+  implicit val Str: Input[(String, Charset)] =
+    new Input[(String, Charset)] {
+      def apply(in: (String, Charset)) =
+        Bytes(in._1.getBytes(in._2.name()))
+    }
 }
