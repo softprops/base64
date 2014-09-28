@@ -1,5 +1,7 @@
 # base64
 
+[![Build Status](https://travis-ci.org/softprops/base64.svg)](https://travis-ci.org/softprops/base64)
+
 > the 64th base of rfc4648
 
 This is a library for base64 encoding and decoding raw data.
