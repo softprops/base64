@@ -2,7 +2,7 @@ organization := "me.lessis"
 
 name := "base64"
 
-version := "0.1.1"
+version := "0.2.0-SNAPSHOT"
 
 licenses := Seq(
   ("MIT", url(s"https://github.com/softprops/${name.value}/blob/${version.value}/LICENSE")))
@@ -34,8 +34,8 @@ seq(cappiSettings:_*)
 
 pomExtra := (
   <scm>
-    <url>git@github.com:softprops/base64.git</url>
-    <connection>scm:git:git@github.com:softprops/base64.git</connection>
+    <url>git@github.com:softprops/{name.value}.git</url>
+    <connection>scm:git:git@github.com:softprops/{name.value}.git</connection>
   </scm>
   <developers>
     <developer>
@@ -43,4 +43,5 @@ pomExtra := (
       <name>Doug Tangren</name>
       <url>https://github.com/softprops</url>
     </developer>
-  </developers>)
+  </developers>
+  <url>https://github.com/softprops/{name.value}</url>)
