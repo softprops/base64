@@ -1,0 +1,17 @@
+# enhancements
+
+Added ability to omit padding characters when encoding
+
+    // with
+    new String(base64.Encode("paddington")) // cGFkZGluZ3Rvbg==
+    // without
+    new String(base64.Encode("paddington", pad = false)) // cGFkZGluZ3Rvbg
+    
+Note that padding has no effect when encoding
+
+    // with
+    base64.Decode(base64.Encode("paddington"))
+      .right.map(new String(_)) // paddington
+    // without
+    base64.Decode(base64.Encode("paddington", pad = false))
+       .right.map(new String(_)) // paddington
