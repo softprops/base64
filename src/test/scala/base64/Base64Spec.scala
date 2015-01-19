@@ -17,6 +17,12 @@ class Base64Spec extends FunSpec {
       }
     }
 
+    it ("should encode with and without padding") {
+      val str = "easure."
+      assert(new String(Encode(str)) === "ZWFzdXJlLg==")
+      assert(new String(Encode(str, padding = false)) === "ZWFzdXJlLg")
+    }
+
   }
 
   describe ("Encode.urlSafe") {

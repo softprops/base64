@@ -7,17 +7,17 @@ object Encode {
 
   /** Encodes an array of bytes into a base64 encoded string
    *  which accounts for url encoding provisions */
-  def urlSafe[T : Input](in: T, multiline: Boolean = false) =
-    encodeWith(URLSafeAlphabet)(in, multiline)
+  def urlSafe[T : Input](in: T, multiline: Boolean = false, padding: Boolean = true) =
+    encodeWith(URLSafeAlphabet)(in, multiline, padding)
 
  /** Encodes an array of bytes into a base64 encoded string
    *   <http://www.apps.ietf.org/rfc/rfc4648.html> */
-  def apply[T : Input](in: T, multiline: Boolean = false) =
-    encodeWith(StdAlphabet)(in, multiline)
+  def apply[T : Input](in: T, multiline: Boolean = false, padding: Boolean = true) =
+    encodeWith(StdAlphabet)(in, multiline, padding)
 
   def encodeWith[T : Input](
     alphabet: Alphabet)
-   (ins: T, multiline: Boolean = false): Array[Byte] = {
+   (ins: T, multiline: Boolean = false, padding: Boolean = true): Array[Byte] = {
     val in =  implicitly[Input[T]].apply(ins)
     val index = alphabet.values
     val len = in.size
@@ -31,7 +31,7 @@ object Encode {
     def write(d: Int = 0, e: Int = 0, col: Int = 0): (Int, Int) =
       if (d >= len2) (d, e)
       else {
-        enc3to4(in, d, 3, out, e, index)
+        enc3to4(in, d, 3, out, e, index, padding)
         if (multiline && col + 4 >= MaxLine) {
           out.update(e + 4, NewLine)
           write(d + 3, e + 5, 0)
@@ -41,8 +41,9 @@ object Encode {
     val (d, e) = write()
     val fe = // extra padding
       if (d < len) {
-        enc3to4(in, d, len - d, out, e, index)
-        e + 4
+        println("adding padding")
+        val updated = enc3to4(in, d, len - d, out, e, index, padding)
+        e + updated
       } else e
     if (fe < out.size - 1) Arrays.copyOf(out, fe) else out
   }
@@ -53,7 +54,8 @@ object Encode {
     numSigBytes: Int, 
     out: Array[Byte],
     outOffset: Int,
-    index: IndexedSeq[Byte]) = {
+    index: IndexedSeq[Byte],
+    padding: Boolean): Int = {
 
     //           1         2         3
     // 01234567890123456789012345678901 Bit position
@@ -75,21 +77,25 @@ object Encode {
         out.update(outOffset + 1, index(inBuff >>> 12 & EncMask))
         out.update(outOffset + 2, index(inBuff >>> 6 & EncMask))
         out.update(outOffset + 3, index(inBuff & EncMask))
-        out
+        4
       case 2 =>
         out.update(outOffset,     index(inBuff >>> 18))
         out.update(outOffset + 1, index(inBuff >>> 12 & EncMask))
         out.update(outOffset + 2, index(inBuff >>> 6 & EncMask))
-        out.update(outOffset + 3, Pad)
-        out
+        if (padding) {
+          out.update(outOffset + 3, Pad)
+          4
+        } else 3
       case 1 =>
         out.update(outOffset,     index(inBuff >>> 18))
         out.update(outOffset + 1, index(inBuff >>> 12 & EncMask))
-        out.update(outOffset + 2, Pad)
-        out.update(outOffset + 3, Pad)
-        out
+        if (padding) {
+          out.update(outOffset + 2, Pad)
+          out.update(outOffset + 3, Pad)
+          4
+        } else 2
       case _ =>
-        out
+        0
     }
   }
 }

@@ -10,7 +10,7 @@ public class JavaTest {
     // to and fro
     Either<Decode.Failure, byte[]> result = 
       Decode.apply(
-        Encode.apply("test", false, strs),
+        Encode.apply("test", false, false, strs),
         bytes);
     // print result
     if (result.isRight()) {
