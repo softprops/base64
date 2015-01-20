@@ -17,16 +17,16 @@ object Decode {
 
   def decodeWith[T : Input](
     alphabet: Alphabet)(ins: T): Either[Failure, Array[Byte]] = {
-     def concat(a: Array[Byte], b: Array[Byte]): Array[Byte] = {
-       val res = new Array[Byte](a.length + b.length)
-       System.arraycopy(a, 0, res, 0, a.length)
-       System.arraycopy(b, 0, res, a.length, b.length)
-       res
-     }
     val in = Input(ins) match {
       case in if in.length % 4 == 0 =>
         in
       case p =>
+        def concat(a: Array[Byte], b: Array[Byte]): Array[Byte] = {
+          val res = new Array[Byte](a.length + b.length)
+          System.arraycopy(a, 0, res, 0, a.length)
+          System.arraycopy(b, 0, res, a.length, b.length)
+          res
+        }
         // if padding was omited, fill it in ourselves
         concat(p, Array.fill(p.length % 4)(Pad))
     }
