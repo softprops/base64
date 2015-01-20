@@ -33,4 +33,6 @@ object Input {
       def apply(in: (String, Charset)) =
         Bytes(in._1.getBytes(in._2.name()))
     }
+
+  def apply[T: Input](in: T) = implicitly[Input[T]].apply(in)
 }
