@@ -13,7 +13,7 @@ Via the copy and paste method
 ```scala
 resolvers += "softprops-maven" at "http://dl.bintray.com/content/softprops/maven"
 
-libraryDependencies += "me.lessis" %% "base64" % "0.1.1"
+libraryDependencies += "me.lessis" %% "base64" % "0.2.0"
 ```
 
 Via [a more civilized method](https://github.com/softprops/ls#readme) which will do the same without all the manual work.
@@ -76,6 +76,25 @@ bWVzIHRoYXQgcmVwcmVzZW50IGJpbmFyeSBkYXRhIGluIGFuIEFTQ0lJIHN0cmluZyBmb3JtYXQg
 YnkgdHJhbnNsYXRpbmcgaXQgaW50byBhIHJhZGl4LTY0IHJlcHJlc2VudGF0aW9uLiBUaGUgdGVy
 bSBCYXNlNjQgb3JpZ2luYXRlcyBmcm9tIGEgc3BlY2lmaWMgTUlNRSBjb250ZW50IHRyYW5zZmVy
 IGVuY29kaW5nLg==
+```
+
+### Omitting padding
+
+You can omit padding from the output of encodings by setting `pad` option to false
+
+This will have the following effect on the results
+
+
+With padding
+
+```scala
+new String(base64.Encode("paddington")) // cGFkZGluZ3Rvbg==
+```
+
+Without padding
+
+```scala
+new String(base64.Encode("paddington", pad = false)) // cGFkZGluZ3Rvbg
 ```
 
 ### Decoding
