@@ -15,3 +15,5 @@ Note that padding has no effect when encoding
     // without
     base64.Decode(base64.Encode("paddington", pad = false))
        .right.map(new String(_)) // paddington
+
+Note that padding was previously expected. Decoding now gracefully handles it's omission
