@@ -17,8 +17,20 @@ object Decode {
 
   def decodeWith[T : Input](
     alphabet: Alphabet)(ins: T): Either[Failure, Array[Byte]] = {
-    val in = implicitly[Input[T]].apply(ins)
-    val len = in.size
+     def concat(a: Array[Byte], b: Array[Byte]): Array[Byte] = {
+       val res = new Array[Byte](a.length + b.length)
+       System.arraycopy(a, 0, res, 0, a.length)
+       System.arraycopy(b, 0, res, a.length, b.length)
+       res
+     }
+    val in = Input(ins) match {
+      case in if in.length % 4 == 0 =>
+        in
+      case p =>
+        // if padding was omited, fill it in ourselves
+        concat(p, Array.fill(p.length % 4)(Pad))
+    }
+    val len = in.length
     val len34 = len * 3 / 4
     val out = new Array[Byte](len34)
     val b4 = new Array[Byte](4)

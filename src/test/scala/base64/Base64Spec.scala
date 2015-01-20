@@ -19,8 +19,13 @@ class Base64Spec extends FunSpec {
 
     it ("should encode with and without padding") {
       val str = "easure."
-      assert(new String(Encode(str)) === "ZWFzdXJlLg==")
-      assert(new String(Encode(str, padding = false)) === "ZWFzdXJlLg")
+      def check(pad: Boolean, expect: Array[Byte]) {
+        val enc = Encode(str, pad = pad)
+        assert(enc === expect)
+        assert(Decode(enc).right.map(new String(_)) === Right(str))
+      }
+      check(true, "ZWFzdXJlLg==".getBytes)
+      check(false, "ZWFzdXJlLg".getBytes)
     }
 
   }
