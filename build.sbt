@@ -20,17 +20,17 @@ libraryDependencies ++= Seq(
   "commons-codec" % "commons-codec" % "1.9" % "test",
   "io.netty" % "netty-codec" % "4.0.23.Final" % "test")
 
-seq(bintraySettings:_*)
+bintraySettings
  
 bintray.Keys.packageLabels in bintray.Keys.bintray := Seq("base64", "encoding", "rfc4648")
 
-seq(lsSettings:_*)
+lsSettings
 
 LsKeys.tags in LsKeys.lsync := (bintray.Keys.packageLabels in bintray.Keys.bintray).value
 
 externalResolvers in LsKeys.lsync := (resolvers in bintray.Keys.bintray).value
 
-seq(cappiSettings:_*)
+cappiSettings
 
 pomExtra := (
   <scm>
