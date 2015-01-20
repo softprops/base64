@@ -6,7 +6,7 @@ object Decode {
 
   val Empty = Array.empty[Byte]
 
-  trait Failure
+  sealed trait Failure
   case class InvalidByte(index: Int, dec: Int) extends Failure
 
   def urlSafe[T : Input](in: T) =
