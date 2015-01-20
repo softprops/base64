@@ -32,7 +32,7 @@ externalResolvers in LsKeys.lsync := (resolvers in bintray.Keys.bintray).value
 
 cappiSettings
 
-pomExtra := (
+pomExtra  := (
   <scm>
     <url>git@github.com:softprops/{name.value}.git</url>
     <connection>scm:git:git@github.com:softprops/{name.value}.git</connection>
@@ -43,5 +43,4 @@ pomExtra := (
       <name>Doug Tangren</name>
       <url>https://github.com/softprops</url>
     </developer>
-  </developers>
-  <url>https://github.com/softprops/{name.value}</url>)
+  </developers>)
