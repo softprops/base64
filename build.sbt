@@ -1,3 +1,7 @@
+
+lazy val root = project.in(file(".")).
+  enablePlugins(ScalaJSPlugin)
+
 organization := "me.lessis"
 
 name := "base64"

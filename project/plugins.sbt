@@ -9,3 +9,4 @@ addSbtPlugin("me.lessis" % "ls-sbt" % "0.1.3")
 
 addSbtPlugin("me.lessis" % "cappi" % "0.1.1")
 
+addSbtPlugin("org.scala-js" % "sbt-scalajs" % "0.6.3")
