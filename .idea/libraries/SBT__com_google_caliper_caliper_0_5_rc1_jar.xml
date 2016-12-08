@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: com.google.caliper:caliper:0.5-rc1:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.google.caliper/caliper/jars/caliper-0.5-rc1.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.google.caliper/caliper/srcs/caliper-0.5-rc1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
