@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="SBT: com.google.code.java-allocation-instrumenter:java-allocation-instrumenter:2.0:jar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.google.code.java-allocation-instrumenter/java-allocation-instrumenter/jars/java-allocation-instrumenter-2.0.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.ivy2/cache/com.google.code.java-allocation-instrumenter/java-allocation-instrumenter/srcs/java-allocation-instrumenter-2.0-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
