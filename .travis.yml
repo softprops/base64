@@ -9,3 +9,8 @@ scala:
   - 2.12.2
 jdk:
   - openjdk6
+  - oraclejdk8
+matrix:
+ exclude:
+  - scala: 2.12.2
+    jdk: openjdk6
