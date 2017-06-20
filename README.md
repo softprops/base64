@@ -145,4 +145,4 @@ taken from
 * [haskell base64](https://github.com/bos/base64-bytestring/tree/master/Data/ByteString)
 * [@tototoshi](https://github.com/tototoshi/scala-base64)
 
-Doug Tangren (softprops) 2013-2014
+Doug Tangren (softprops) 2013-2017
