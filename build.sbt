@@ -20,15 +20,13 @@ libraryDependencies ++= Seq(
   "commons-codec" % "commons-codec" % "1.10" % "test",
   "io.netty" % "netty-codec" % "4.1.12.Final" % "test")
 
-bintraySettings
- 
-bintray.Keys.packageLabels in bintray.Keys.bintray := Seq("base64", "encoding", "rfc4648")
+bintrayPackageLabels in bintray := Seq("base64", "encoding", "rfc4648")
 
 lsSettings
 
-LsKeys.tags in LsKeys.lsync := (bintray.Keys.packageLabels in bintray.Keys.bintray).value
+LsKeys.tags in LsKeys.lsync := (bintrayPackageLabels in bintray).value
 
-externalResolvers in LsKeys.lsync := (resolvers in bintray.Keys.bintray).value
+externalResolvers in LsKeys.lsync := (resolvers in bintray).value
 
 cappiSettings
 
