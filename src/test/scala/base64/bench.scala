@@ -2,8 +2,7 @@ package base64
 
 import org.apache.commons.codec.binary.Base64
 import io.netty.handler.codec.base64.{ Base64 => NettyBase64 }
-import io.netty.buffer.{ ByteBuf, Unpooled }
-import java.nio.ByteBuffer
+import io.netty.buffer.Unpooled
 
 object Bench {
   val bytes =  "Man is distinguished, not only by his reason, but by this singular passion from other animals, which is a lust of the mind, that by a perseverance of delight in the continued and indefatigable generation of knowledge, exceeds the short vehemence of any carnal pleasure.".getBytes
