@@ -16,9 +16,9 @@ crossScalaVersions := Seq("2.10.6", "2.11.11", "2.12.2")
 scalaVersion := crossScalaVersions.value.last
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "3.0.0" % "test",
-  "commons-codec" % "commons-codec" % "1.9" % "test",
-  "io.netty" % "netty-codec" % "4.0.23.Final" % "test")
+  "org.scalatest" %% "scalatest" % "3.0.3" % "test",
+  "commons-codec" % "commons-codec" % "1.10" % "test",
+  "io.netty" % "netty-codec" % "4.1.12.Final" % "test")
 
 bintraySettings
  
