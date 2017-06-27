@@ -4,7 +4,7 @@ import scala.util.Either;
 
 public class JavaTest {
   public static void main(String[] args) {
-      // type class instanes
+    // type class instances
     Input<String> strs = Input$.MODULE$.Utf8Str();
     Input<byte[]> bytes = Input$.MODULE$.Bytes();
     // to and fro

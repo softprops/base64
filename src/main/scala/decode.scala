@@ -27,7 +27,7 @@ object Decode {
           System.arraycopy(b, 0, res, a.length, b.length)
           res
         }
-        // if padding was omited, fill it in ourselves
+        // if padding was omitted, fill it in ourselves
         concat(p, Array.fill(p.length % 4)(Pad))
     }
     val len = in.length
