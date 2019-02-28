@@ -16,9 +16,9 @@ crossScalaVersions := Seq("2.10.7", "2.11.12", "2.12.8")
 scalaVersion := crossScalaVersions.value.last
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "3.0.3" % "test",
-  "commons-codec" % "commons-codec" % "1.10" % "test",
-  "io.netty" % "netty-codec" % "4.1.12.Final" % "test")
+  "org.scalatest" %% "scalatest" % "3.0.6" % Test,
+  "commons-codec" % "commons-codec" % "1.12" % Test,
+  "io.netty" % "netty-codec" % "4.1.33.Final" % Test)
 
 bintrayPackageLabels in bintray := Seq("base64", "encoding", "rfc4648")
 
