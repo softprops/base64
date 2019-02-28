@@ -11,24 +11,22 @@ homepage := Some(url(s"https://github.com/softprops/${name.value}/#readme"))
 
 scalacOptions += Opts.compile.deprecation
 
-crossScalaVersions := Seq("2.10.4", "2.11.5", "2.12.1")
+crossScalaVersions := Seq("2.10.7", "2.11.12", "2.12.8")
 
 scalaVersion := crossScalaVersions.value.last
 
 libraryDependencies ++= Seq(
-  "org.scalatest" %% "scalatest" % "3.0.0" % "test",
-  "commons-codec" % "commons-codec" % "1.9" % "test",
-  "io.netty" % "netty-codec" % "4.0.23.Final" % "test")
+  "org.scalatest" %% "scalatest" % "3.0.6" % Test,
+  "commons-codec" % "commons-codec" % "1.12" % Test,
+  "io.netty" % "netty-codec" % "4.1.33.Final" % Test)
 
-bintraySettings
- 
-bintray.Keys.packageLabels in bintray.Keys.bintray := Seq("base64", "encoding", "rfc4648")
+bintrayPackageLabels in bintray := Seq("base64", "encoding", "rfc4648")
 
 lsSettings
 
-LsKeys.tags in LsKeys.lsync := (bintray.Keys.packageLabels in bintray.Keys.bintray).value
+LsKeys.tags in LsKeys.lsync := (bintrayPackageLabels in bintray).value
 
-externalResolvers in LsKeys.lsync := (resolvers in bintray.Keys.bintray).value
+externalResolvers in LsKeys.lsync := (resolvers in bintray).value
 
 cappiSettings
 
